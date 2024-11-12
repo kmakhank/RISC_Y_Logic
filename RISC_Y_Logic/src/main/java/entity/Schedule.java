@@ -15,4 +15,16 @@ public class Schedule {
         this.weeklySchedule = weeklySchedule;
         this.unavailableTimes = unavailableTimes;
     }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public Map<LocalDate, List<TimeSlot>> getWeeklySchedule() {
+        return weeklySchedule;
+    }
+
+    public List<TimeSlot> getUnavailableTimes() {
+        return unavailableTimes;
+    }
 }

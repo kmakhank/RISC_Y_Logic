@@ -21,4 +21,8 @@ public class Event {
         this.tags = tags;
         this.source = source;
     }
+
+    public UUID getId() {
+        return id;
+    }
 }

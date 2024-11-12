@@ -18,4 +18,23 @@ public class UserProfile {
         this.careerGoals = careerGoals;
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getAcademicProgram() {
+        return academicProgram;
+    }
+
+    public List<String> getCareerGoals() {
+        return careerGoals;
+    }
 }

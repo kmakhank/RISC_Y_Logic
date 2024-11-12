@@ -17,4 +17,24 @@ public class Course {
         this.description = description;
         this.skillsGained = skillsGained;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Set<String> getSkillsGained() {
+        return skillsGained;
+    }
 }
