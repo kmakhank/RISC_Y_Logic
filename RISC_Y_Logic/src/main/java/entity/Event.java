@@ -25,4 +25,24 @@ public class Event {
     public UUID getId() {
         return id;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public String getSource() {
+        return source;
+    }
 }
