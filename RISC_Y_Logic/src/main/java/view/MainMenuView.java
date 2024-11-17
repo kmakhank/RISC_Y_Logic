@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainMenuView {
-    public static void main(String[] args) {
+    public MainMenuView() {
         JFrame frame = new JFrame("Main Menu");
         frame.setSize(350, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
