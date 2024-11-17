@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginAndSignupView {
     public static void main(String[] args) {
@@ -38,16 +40,14 @@ public class LoginAndSignupView {
         usernameField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
         usernameField.setBounds(100, 100, 150, 30);
 
-        JTextField passwordField = new JTextField();
-        passwordField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        JPasswordField passwordField = new JPasswordField();
         passwordField.setBounds(100, 150, 150, 30);
 
         JTextField newUsernameField = new JTextField();
         newUsernameField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
         newUsernameField.setBounds(400, 100, 150, 30);
 
-        JTextField newPasswordField = new JTextField();
-        newPasswordField.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+        JPasswordField newPasswordField = new JPasswordField();
         newPasswordField.setBounds(400, 150, 150, 30);
 
         JButton loginButton = new JButton("Login");
