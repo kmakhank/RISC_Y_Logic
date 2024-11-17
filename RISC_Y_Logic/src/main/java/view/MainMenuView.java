@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainMenuView {
     public MainMenuView() {
@@ -13,6 +15,12 @@ public class MainMenuView {
         JButton calendarButton = new JButton("Calendar");
         calendarButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
         calendarButton.setBounds(25, 50, 150, 80);
+        calendarButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        new CalendarView();
+                    }
+        });
 
         JButton eventsButton = new JButton("Events");
         eventsButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
@@ -21,6 +29,12 @@ public class MainMenuView {
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
         backButton.setBounds(105, 150, 150, 80);
+        backButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        new LoginAndSignupView();
+                    }
+                });
 
         frame.add(calendarButton);
         frame.add(eventsButton);

@@ -3,7 +3,7 @@ package view;
 import javax.swing.*;
 
 public class AddCourseScheduleView {
-    public static void main(String[] args) {
+    public AddCourseScheduleView() {
         JFrame frame = new JFrame("Add Course Schedule Page");
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
