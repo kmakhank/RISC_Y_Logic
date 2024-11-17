@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginAndSignupView {
-    public static void main(String[] args) {
+    public LoginAndSignupView() {
 
         UserRepository userRepository = new UserRepository();
         LoginInteractor loginInteractor = new LoginInteractor(userRepository);

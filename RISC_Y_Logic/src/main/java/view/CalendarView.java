@@ -2,12 +2,14 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class CalendarView {
 
-    public static void main(String[] args) {
+    public CalendarView() {
 
         Calendar calendar = Calendar.getInstance();
         final int[] year = {calendar.get(Calendar.YEAR)};
@@ -19,11 +21,6 @@ public class CalendarView {
         frame.setLayout(new BorderLayout());
 
         JPanel headerPanel = new JPanel();
-        JButton previousButton = new JButton("<");
-        JButton nextButton = new JButton(">");
-        JButton addEventButton = new JButton("Add Event");
-        JButton addCourseScheduleButton = new JButton("Add Course Schedule");
-        JButton backButton = new JButton("Back");
 
         JLabel monthLabel = new JLabel();
         monthLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -31,25 +28,51 @@ public class CalendarView {
         JPanel calendarPanel = new JPanel();
         calendarPanel.setLayout(new GridLayout(0, 7));
 
-        previousButton.addActionListener(e -> {
-            month[0] = month[0] - 1;
-            if (month[0] < 0) {
-                month[0] = 11;
-                year[0] = year[0] - 1;
-            }
-            updateCalendar(year[0], month[0], monthLabel, calendarPanel);
+        JButton previousButton = new JButton("<");
+        previousButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        month[0] = month[0] - 1;
+                        if (month[0] < 0) {
+                            month[0] = 11;
+                            year[0] = year[0] - 1;
+                        }
+                        updateCalendar(year[0], month[0], monthLabel, calendarPanel);}
         });
 
-        nextButton.addActionListener(e -> {
-            month[0] = month[0] + 1;
-            if (month[0] >= 12) {
-                month[0] = 0;
-                year[0] = year[0] + 1;
-            }
-            updateCalendar(year[0], month[0], monthLabel, calendarPanel);
-        });
+        JButton nextButton = new JButton(">");
+        nextButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        month[0] = month[0] + 1;
+                        if (month[0] >= 12) {
+                            month[0] = 0;
+                            year[0] = year[0] + 1;
+                        }
+                        updateCalendar(year[0], month[0], monthLabel, calendarPanel);}
+                });
+
+        JButton addEventButton = new JButton("Add Event");
+        addEventButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+
+                    }
+                }
+        );
+
+        JButton addCourseScheduleButton = new JButton("Add Course Schedule");
+        addCourseScheduleButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+
+                    }
+                }
+        );
+        JButton backButton = new JButton("Back");
 
         headerPanel.setLayout(new BorderLayout());
+
         headerPanel.add(previousButton, BorderLayout.WEST);
         headerPanel.add(monthLabel, BorderLayout.CENTER);
         headerPanel.add(nextButton, BorderLayout.EAST);
