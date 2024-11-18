@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,23 +18,39 @@ public class MainMenuView {
     public MainMenuView() {
         frame.setSize(350, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(null);
+        frame.setLayout(new BorderLayout());
 
+        JPanel topPanel = new JPanel();
+        topPanel.setBackground(new Color(70, 130, 180));
+        JLabel titleLabel = new JLabel("Main Menu");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        titleLabel.setForeground(Color.WHITE);
+        topPanel.add(titleLabel);
 
-        calendarButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-        calendarButton.setBounds(25, 50, 150, 80);
+        JPanel centrePanel = new JPanel();
+        centrePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        centrePanel.setBackground(new Color(245, 245, 245));
+        calendarButton.setPreferredSize(new Dimension(120, 50));
+        calendarButton.setBackground(new Color(70, 130, 180));
+        calendarButton.setForeground(Color.BLACK);
         calendarButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         new CalendarView();
                     }
         });
+        centrePanel.add(calendarButton);
 
-        eventsButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-        eventsButton.setBounds(175, 50, 150, 80);
+        eventsButton.setPreferredSize(new Dimension(120, 50));
+        eventsButton.setBackground(new Color(70, 130, 180));
+        eventsButton.setForeground(Color.BLACK);
 
-        backButton.setFont(new Font("Times New Roman", Font.PLAIN, 30));
-        backButton.setBounds(105, 150, 150, 80);
+        centrePanel.add(eventsButton);
+
+        JPanel bottomPanel = new JPanel();
+        backButton.setBackground(new Color(70, 130, 180));
+        backButton.setForeground(Color.BLACK);
+        backButton.setPreferredSize(new Dimension(120, 50));
         backButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -40,9 +58,11 @@ public class MainMenuView {
                     }
                 });
 
-        frame.add(calendarButton);
-        frame.add(eventsButton);
-        frame.add(backButton);
+        bottomPanel.add(backButton);
+
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(centrePanel, BorderLayout.CENTER);
+        frame.add(bottomPanel, BorderLayout.SOUTH);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
