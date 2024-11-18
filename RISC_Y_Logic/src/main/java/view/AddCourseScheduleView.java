@@ -1,18 +1,20 @@
 package view;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class AddCourseScheduleView {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Add Course Schedule Page");
+    JFrame frame = new JFrame("Add Course Schedule Page");
+    JButton uploadCourseScheduleButton = new JButton("Upload Course Schedule");
+    JButton backButton = new JButton("Back");
+
+    public AddCourseScheduleView() {
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
 
-        JButton uploadCourseScheduleButton = new JButton("Upload Course Schedule");
         uploadCourseScheduleButton.setBounds(210, 50, 100, 80);
 
-        JButton backButton = new JButton("Back");
         backButton.setBounds(210, 200, 100, 80);
 
         frame.add(uploadCourseScheduleButton);
