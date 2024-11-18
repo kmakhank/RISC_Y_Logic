@@ -1,9 +1,16 @@
 package app;
 
-import view.LoginAndSignupView;
+import javax.swing.*;
 
 public class MainApp {
     public static void main(String[] args) {
-        new LoginAndSignupView();
+        final AppBuilder appBuilder = new AppBuilder();
+        final JFrame application = appBuilder
+                .addAddEventView()
+                .addEventRecommendationView()
+                .build();
+
+        application.pack();
+        application.setVisible(true);
     }
 }
