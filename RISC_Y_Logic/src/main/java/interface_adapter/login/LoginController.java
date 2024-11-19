@@ -1,6 +1,6 @@
 package interface_adapter.login;
 
-import use_case.LoginInteractor;
+import use_case.login.LoginInteractor;
 
 public class LoginController {
     private final LoginInteractor loginInteractor;

@@ -4,8 +4,8 @@ import interface_adapter.login.LoginController;
 import interface_adapter.signup.SignupController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.signup.SignupPresenter;
-import use_case.LoginInteractor;
-import use_case.SignupInteractor;
+import use_case.login.LoginInteractor;
+import use_case.signup.SignupInteractor;
 import data_access.UserRepository;
 
 import javax.swing.*;

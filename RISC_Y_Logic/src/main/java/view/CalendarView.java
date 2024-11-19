@@ -27,6 +27,9 @@ public class CalendarView {
     JButton addCourseScheduleButton = new JButton("Add Course Schedule");
     JButton backButton = new JButton("Back");
 
+    /**
+     *
+     */
     public CalendarView() {
 
         frame.setSize(1000, 800);
