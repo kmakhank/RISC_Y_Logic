@@ -1,4 +1,4 @@
-package use_case;
+package use_case.login;
 
 import data_access.UserRepository;
 import entity.User;
