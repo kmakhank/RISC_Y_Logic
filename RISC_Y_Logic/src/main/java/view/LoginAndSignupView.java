@@ -109,7 +109,7 @@ public class LoginAndSignupView {
 
         signUpButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
         signUpButton.setBounds(420, 200, 100, 50);
-        signUpButton.setForeground(new Color(90, 180, 70));
+        signUpButton.setForeground(new Color(70, 130, 180));
 
         signUpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         signUpButton.addActionListener(
