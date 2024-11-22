@@ -1,4 +1,9 @@
 package interface_adapter.mainmenu;
 
-public class MainMenuCalendarController {
+import view.CalendarView;
+
+public class MainMenuCalendarController implements ButtonController {
+    public void click() {
+        new CalendarView();
+    }
 }

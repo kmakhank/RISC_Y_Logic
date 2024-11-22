@@ -1,8 +1,12 @@
 package interface_adapter.mainmenu;
 
-public class MainMenuBackButtonController {
-    
-    public MainMenuBackButtonController() {
+import view.LoginAndSignupView;
+
+public class MainMenuBackButtonController implements ButtonController {
+
+    @Override
+    public void click() {
+        new LoginAndSignupView();
 
     }
 }
