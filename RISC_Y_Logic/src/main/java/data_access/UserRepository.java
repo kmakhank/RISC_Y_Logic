@@ -13,7 +13,7 @@ public class UserRepository implements LoginDataAccessInterface,
 
     public UserRepository() {
         save(new User("stephenli", "957772"));
-        save(new User("justintrudeau", "8964"));
+        save(new User("justintrudeau", "7853"));
     }
 
     @Override

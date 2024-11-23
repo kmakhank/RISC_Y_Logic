@@ -17,7 +17,4 @@ public class User {
         return password;
     }
 
-    public boolean checkpassword(String username, String password) {
-        return this.username.equals(username) && this.password.equals(password);
-    }
 }

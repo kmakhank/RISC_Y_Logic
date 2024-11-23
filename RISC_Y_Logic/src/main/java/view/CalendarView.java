@@ -1,14 +1,12 @@
 package view;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.BorderFactory;
+import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -27,9 +25,6 @@ public class CalendarView {
     JButton addCourseScheduleButton = new JButton("Add Course Schedule");
     JButton backButton = new JButton("Back");
 
-    /**
-     *
-     */
     public CalendarView() {
 
         frame.setSize(1000, 800);
@@ -83,16 +78,16 @@ public class CalendarView {
                 }
         );
 
-        styleButton(addEventButton);
+        styleButton(addCourseScheduleButton);
         addCourseScheduleButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-
+                        new AddCourseScheduleView();
                     }
                 }
         );
 
-        styleButton(addEventButton);
+        styleButton(backButton);
 
         headerPanel.setLayout(new BorderLayout());
 
@@ -130,7 +125,7 @@ public class CalendarView {
         String monthName[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         monthLabel.setText(monthName[month] + " " + year);
 
-        String days[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        String days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         for (String day : days) {
             JLabel dayLabel = new JLabel(day, JLabel.CENTER);
             dayLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
@@ -156,10 +151,21 @@ public class CalendarView {
                 dayLabel.setBackground(new Color(255, 228, 225));
             }
 
+
+            dayLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JOptionPane.showMessageDialog(dayLabel, "Courses and Events:");
+                }
+            });
             calendarPanel.add(dayLabel);
         }
 
         calendarPanel.revalidate();
         calendarPanel.repaint();
+    }
+
+    public static void main(String[] args) {
+        new CalendarView();
     }
 }
