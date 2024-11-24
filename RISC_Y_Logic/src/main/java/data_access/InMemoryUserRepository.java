@@ -7,11 +7,11 @@ import use_case.signup.SignupDataAccessInterface;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserRepository implements LoginDataAccessInterface,
+public class InMemoryUserRepository implements LoginDataAccessInterface,
                                        SignupDataAccessInterface {
     private final Map<String, User> users = new HashMap<>();
 
-    public UserRepository() {
+    public InMemoryUserRepository() {
         save(new User("stephenli", "957772"));
         save(new User("justintrudeau", "7853"));
     }

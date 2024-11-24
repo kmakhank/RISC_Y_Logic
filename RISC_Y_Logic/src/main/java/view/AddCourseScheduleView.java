@@ -19,27 +19,26 @@ public class AddCourseScheduleView {
     JButton backButton = new JButton("Back");
     JTextPane textPane = new JTextPane();
     JScrollPane scrollPane = new JScrollPane(textPane);
-    List<HashMap<String, String>> courseInformation = new ArrayList<>();
 
-    String username = "";
-    Map<String, CourseSchedule> courseSchedules = new HashMap<>();
+    Map<String, CourseSchedule> courseSchedules;
+    Map<LocalDate, List<CourseSchedule>> dateToScheduleMap;
 
-    public AddCourseScheduleView() {
+    public AddCourseScheduleView(Map<LocalDate, List<CourseSchedule>> dateToScheduleMap, Map<String, CourseSchedule> courseSchedules) {
+        this.dateToScheduleMap = dateToScheduleMap;
+        this.courseSchedules = courseSchedules;
+
         frame.setSize(600, 500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLayout(null);
 
         uploadCourseScheduleButton.setBounds(50, 30, 200, 40);
-        uploadCourseScheduleButton.addActionListener(e -> {
-            CalendarView calendarView = new CalendarView();
-            handleAddCourseSchedule(calendarView);
-        });
+        uploadCourseScheduleButton.addActionListener(e -> handleAddCourseSchedule());
+
         viewScheduleButton.setBounds(340, 30, 200, 40);
-        viewScheduleButton.addActionListener(e -> {
-            displayCourseSchedule();
-        });
+        viewScheduleButton.addActionListener(e -> displayCourseSchedule());
 
         backButton.setBounds(200, 90, 200, 40);
+        backButton.addActionListener(e -> frame.dispose());
 
         scrollPane.setBounds(50, 150, 500, 300);
         textPane.setEditable(false);
@@ -53,7 +52,7 @@ public class AddCourseScheduleView {
         frame.setVisible(true);
     }
 
-    public void handleAddCourseSchedule(CalendarView calendarView) {
+    public void handleAddCourseSchedule() {
         JPanel panel = new JPanel(new GridLayout(0, 2));
 
         panel.add(new JLabel("Day of the Week (e.g., Monday):"));
@@ -80,56 +79,36 @@ public class AddCourseScheduleView {
         int result = JOptionPane.showConfirmDialog(frame, panel, "Add Course Schedule", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            HashMap<String, String> subCourseInformation = new HashMap<>();
             try {
                 String dayInput = dayField.getText().trim();
-                if (dayInput.isEmpty()) {
-                    throw new IllegalArgumentException("Day of the week cannot be empty.");
-                }
-                else {
-                    subCourseInformation.put("day", dayInput);
-                }
-
-                LocalDate date = mapDayToDate(dayInput);
-                if (date == null) {
-                    throw new IllegalArgumentException("Invalid day of the week.");
-                }
-                else {
-                    subCourseInformation.put("date", date.toString());
-                }
-
                 String courseNameInput = courseNameField.getText().trim();
-                if (courseNameInput.isEmpty()) {
-                    throw new IllegalArgumentException("Course name cannot be empty.");
-                }
-                else {
-                    subCourseInformation.put("courseName", courseNameInput);
-                }
-
                 String startTimeInput = startTimeField.getText().trim();
                 String endTimeInput = endTimeField.getText().trim();
-                if (startTimeInput.isEmpty() || endTimeInput.isEmpty()) {
-                    throw new IllegalArgumentException("Start time and end time cannot be empty.");
+                String semesterInput = (String) semesterComboBox.getSelectedItem();
+
+                if (dayInput.isEmpty() || courseNameInput.isEmpty() || startTimeInput.isEmpty() || endTimeInput.isEmpty()) {
+                    throw new IllegalArgumentException("All fields must be filled");
                 }
 
-                subCourseInformation.put("startTime", startTimeInput);
-                subCourseInformation.put("endTime", endTimeInput);
                 LocalTime startTime = LocalTime.parse(startTimeInput);
                 LocalTime endTime = LocalTime.parse(endTimeInput);
-
                 TimeSlot timeSlot = new TimeSlot(startTime, endTime);
 
-                courseSchedules.putIfAbsent(courseNameInput, new CourseSchedule(username, courseNameInput, new HashMap<>()));
-                CourseSchedule currentSchedule = courseSchedules.get(courseNameInput);
+                List<LocalDate> localDates = mapDayToDates(dayInput, semesterInput);
 
-                currentSchedule.getInstanceDateAndTimeSlot().putIfAbsent(date, new ArrayList<>());
-                currentSchedule.getInstanceDateAndTimeSlot().get(date).add(timeSlot);
+                CourseSchedule courseSchedule = new CourseSchedule(courseNameInput, new TreeMap<>());
 
-                courseInformation.add(subCourseInformation);
+                for (LocalDate localDate : localDates) {
+                    courseSchedule.getInstanceDateAndTimeSlot().putIfAbsent(localDate, new ArrayList<>());
+                    courseSchedule.getInstanceDateAndTimeSlot().get(localDate).add(timeSlot);
 
-                JOptionPane.showMessageDialog(frame, "Course schedule added successfully!");
+                    dateToScheduleMap.putIfAbsent(localDate, new ArrayList<>());
+                    dateToScheduleMap.get(localDate).add(courseSchedule);
+                }
 
-                System.out.println(courseInformation);
+                courseSchedules.put(courseNameInput, courseSchedule);
+
+                JOptionPane.showMessageDialog(frame, "Course schedule successfully added!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             } catch (IllegalArgumentException | DateTimeParseException | IllegalAccessException ex) {
                 JOptionPane.showMessageDialog(frame, "Error: " + ex.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -139,20 +118,18 @@ public class AddCourseScheduleView {
 
     public void displayCourseSchedule() {
         if (courseSchedules.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "No course schedule found");
+            JOptionPane.showMessageDialog(frame, "No course schedule found", "Info", JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Username: ").append(username).append("\n\n");
 
-        // CHANGE 4: Iterate over all courses and their schedules
         courseSchedules.forEach((courseName, schedule) -> {
             stringBuilder.append("Course Name: ").append(courseName).append("\n");
             schedule.getInstanceDateAndTimeSlot().forEach((day, timeSlots) -> {
-                stringBuilder.append("  Day: ").append(day).append("\n");
+                stringBuilder.append("Day: ").append(day).append("\n");
                 timeSlots.forEach(slot -> {
-                    stringBuilder.append("    Start Time: ").append(slot.getStartTime())
+                    stringBuilder.append("Start Time: ").append(slot.getStartTime())
                             .append(", End Time: ").append(slot.getEndTime()).append("\n");
                 });
                 stringBuilder.append("\n");
@@ -160,31 +137,44 @@ public class AddCourseScheduleView {
         });
 
         textPane.setText(stringBuilder.toString());
-
+        JOptionPane.showMessageDialog(frame, "Course schedules updated in the view!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public LocalDate mapDayToDate(String dayInput) {
-        switch (dayInput.toLowerCase()) {
-            case "monday":
-                return LocalDate.now().with(DayOfWeek.MONDAY);
-            case "tuesday":
-                return LocalDate.now().with(DayOfWeek.TUESDAY);
-            case "wednesday":
-                return LocalDate.now().with(DayOfWeek.WEDNESDAY);
-            case "thursday":
-                return LocalDate.now().with(DayOfWeek.THURSDAY);
-            case "friday":
-                return LocalDate.now().with(DayOfWeek.FRIDAY);
-            case "saturday":
-                return LocalDate.now().with(DayOfWeek.SATURDAY);
-            case "sunday":
-                return LocalDate.now().with(DayOfWeek.SUNDAY);
+    public List<LocalDate> mapDayToDates(String dayInput, String semesterInput) {
+        LocalDate startDate;
+        LocalDate endDate;
+        DayOfWeek dayOfWeek = DayOfWeek.valueOf(dayInput.toUpperCase());
+        List<LocalDate> localDates = new ArrayList<>();
+
+        switch (semesterInput) {
+            case "Fall":
+                startDate = LocalDate.of(LocalDate.now().getYear(), 9, 1);
+                endDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
+                break;
+            case "Winter":
+                startDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
+                endDate = LocalDate.of(LocalDate.now().getYear(), 4, 30);
+                break;
+            case "Summer":
+                startDate = LocalDate.of(LocalDate.now().getYear(), 5, 1);
+                endDate = LocalDate.of(LocalDate.now().getYear(), 8, 31);
+                break;
             default:
-                return null;
+                throw new IllegalArgumentException("Invalid Semester");
         }
+
+        LocalDate date = startDate;
+        while (date.isBefore(endDate) || date.isEqual(endDate)) {
+            if (date.getDayOfWeek() == dayOfWeek) {
+                localDates.add(date);
+            }
+            date = date.plusDays(1);
+        }
+
+        return localDates;
     }
 
     public static void main(String[] args) {
-        new AddCourseScheduleView();
+        new CalendarView();
     }
 }

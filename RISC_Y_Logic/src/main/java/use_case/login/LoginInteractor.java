@@ -1,13 +1,13 @@
 package use_case.login;
 
-import data_access.UserRepository;
+import data_access.InMemoryUserRepository;
 import entity.User;
 
 public class LoginInteractor implements LoginInputBoundary {
     private final LoginDataAccessInterface userRepository;
     private final LoginOutputBoundary loginOutputBoundary;
 
-    public LoginInteractor(UserRepository userRepository, LoginOutputBoundary loginOutputBoundary) {
+    public LoginInteractor(InMemoryUserRepository userRepository, LoginOutputBoundary loginOutputBoundary) {
         this.userRepository = userRepository;
         this.loginOutputBoundary = loginOutputBoundary;
     }

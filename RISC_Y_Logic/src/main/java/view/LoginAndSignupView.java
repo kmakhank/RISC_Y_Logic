@@ -8,16 +8,13 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import use_case.login.LoginInteractor;
 import use_case.signup.SignupInteractor;
-import data_access.UserRepository;
+import data_access.InMemoryUserRepository;
 
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class LoginAndSignupView {
-    private final UserRepository userRepository = new UserRepository();
+    private final InMemoryUserRepository userRepository = new InMemoryUserRepository();
     private final LoginViewModel loginViewModel = new LoginViewModel();
     private final SignupViewModel signupViewModel = new SignupViewModel();
     private final LoginPresenter loginPresenter = new LoginPresenter(loginViewModel);
