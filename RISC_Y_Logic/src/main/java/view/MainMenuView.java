@@ -1,5 +1,9 @@
 package view;
 
+import interface_adapter.mainmenu.MainMenuBackButtonController;
+import interface_adapter.mainmenu.MainMenuCalendarController;
+import interface_adapter.mainmenu.MainMenuEventsController;
+
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -30,31 +34,42 @@ public class MainMenuView {
         JPanel centrePanel = new JPanel();
         centrePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         centrePanel.setBackground(new Color(245, 245, 245));
+
+        MainMenuCalendarController calendarController = new MainMenuCalendarController();
         calendarButton.setPreferredSize(new Dimension(120, 50));
         calendarButton.setBackground(new Color(70, 130, 180));
         calendarButton.setForeground(Color.BLACK);
         calendarButton.addActionListener(
                 new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        new CalendarView();
+                    public void actionPerformed(ActionEvent e) {calendarController.click();
                     }
-        });
+                });
+
         centrePanel.add(calendarButton);
 
+        MainMenuEventsController mainMenuEventsController = new MainMenuEventsController();
         eventsButton.setPreferredSize(new Dimension(120, 50));
         eventsButton.setBackground(new Color(70, 130, 180));
         eventsButton.setForeground(Color.BLACK);
+        eventsButton.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        mainMenuEventsController.click();
+                    }
+                });
 
         centrePanel.add(eventsButton);
 
         JPanel bottomPanel = new JPanel();
+
+        MainMenuBackButtonController mainMenuBackButtonController = new MainMenuBackButtonController();
         backButton.setBackground(new Color(70, 130, 180));
         backButton.setForeground(Color.BLACK);
         backButton.setPreferredSize(new Dimension(120, 50));
         backButton.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        new LoginAndSignupView();
+                        mainMenuBackButtonController.click();
                     }
                 });
 
@@ -66,5 +81,6 @@ public class MainMenuView {
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
     }
 }

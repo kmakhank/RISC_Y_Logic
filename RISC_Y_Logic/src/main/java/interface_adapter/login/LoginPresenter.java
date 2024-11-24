@@ -1,11 +1,21 @@
 package interface_adapter.login;
 
-public class LoginPresenter {
-    public String prepareSuccessMessage() {
-        return "Login successful!";
+import use_case.login.LoginOutputBoundary;
+import use_case.login.LoginOutputData;
+
+public class LoginPresenter implements LoginOutputBoundary {
+    private final LoginViewModel viewModel;
+
+    public LoginPresenter(LoginViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
-    public String prepareFailureMessage() {
-        return "Invalid username or password.";
+    @Override
+    public void prepareMessage(LoginOutputData loginOutputData) {
+        if (loginOutputData.getUseCaseFailed()) {
+            viewModel.onLoginFailure("Invalid username or password.");
+        } else {
+            viewModel.onLoginSuccess(loginOutputData.getUsername());
+        }
     }
 }

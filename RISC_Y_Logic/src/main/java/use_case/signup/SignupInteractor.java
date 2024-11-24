@@ -1,17 +1,25 @@
 package use_case.signup;
 
-import data_access.UserRepository;
 import entity.User;
 
-public class SignupInteractor {
-    public final UserRepository userRepository;
+public class SignupInteractor implements SignupInputBoundary{
+    private final SignupDataAccessInterface userRepository;
+    private final SignupOutputBoundary signupOutputBoundary;
 
-    public SignupInteractor(UserRepository userRepository) {
+    public SignupInteractor(SignupDataAccessInterface userRepository,
+                            SignupOutputBoundary signupOutputBoundary) {
         this.userRepository = userRepository;
+        this.signupOutputBoundary = signupOutputBoundary;
     }
 
-    public boolean signup(String username, String password) {
-        User newUser = new User(username, password);
-        return userRepository.save(newUser);
+    public void execute(SignupInputData signupInputData) {
+        String username = signupInputData.getUsername();
+        if (userRepository.existByName(signupInputData.getUsername())) {
+            signupOutputBoundary.prepareMessage(new SignupOutputData(username, true));
+            userRepository.save(new User(username, signupInputData.getPassword()));
+        }
+        else {
+            signupOutputBoundary.prepareMessage(new SignupOutputData(username, false));
+        }
     }
 }
