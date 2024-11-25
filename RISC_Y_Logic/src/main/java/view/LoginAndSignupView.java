@@ -1,27 +1,29 @@
 package view;
 
 import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.signup.SignupPresenter;
+import interface_adapter.signup.SignupViewModel;
 import use_case.login.LoginInteractor;
 import use_case.signup.SignupInteractor;
-import data_access.UserRepository;
+import data_access.InMemoryUserRepository;
 
 import javax.swing.*;
 import java.awt.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class LoginAndSignupView {
-    UserRepository userRepository = new UserRepository();
-    LoginInteractor loginInteractor = new LoginInteractor(userRepository);
-    SignupInteractor signupInteractor = new SignupInteractor(userRepository);
-    LoginController loginController = new LoginController(loginInteractor);
-    SignupController signupController = new SignupController(signupInteractor);
-    LoginPresenter loginPresenter = new LoginPresenter();
-    SignupPresenter signupPresenter = new SignupPresenter();
+    private final InMemoryUserRepository userRepository = new InMemoryUserRepository();
+    private final LoginViewModel loginViewModel = new LoginViewModel();
+    private final SignupViewModel signupViewModel = new SignupViewModel();
+    private final LoginPresenter loginPresenter = new LoginPresenter(loginViewModel);
+    private final SignupPresenter signupPresenter = new SignupPresenter(signupViewModel);
+    private final LoginInteractor loginInteractor = new LoginInteractor(userRepository, loginPresenter);
+    private final SignupInteractor signupInteractor = new SignupInteractor(userRepository, signupPresenter);
+    private final LoginController loginController = new LoginController(loginInteractor);
+    private final SignupController signupController = new SignupController(signupInteractor);
+
     JLabel loginLabel = new JLabel("Login");
     JLabel username = new JLabel("Username:");
     JLabel password = new JLabel("Password:");
@@ -72,20 +74,31 @@ public class LoginAndSignupView {
         loginButton.setBounds(120, 200, 100, 50);
         loginButton.setForeground(new Color(70, 130, 180));
         loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        loginButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        String loginUsername = usernameField.getText();
-                        String loginPassword = passwordField.getText();
-                        if (loginController.login(loginUsername, loginPassword)) {
-                            JOptionPane.showMessageDialog(frame, loginPresenter.prepareSuccessMessage());
-                            frame.dispose();
-                            new MainMenuView();
-                        } else {
-                            JOptionPane.showMessageDialog(frame, loginPresenter.prepareFailureMessage());
-                        }
-                    }
-                });
+        loginButton.addActionListener(e -> {
+            String username = usernameField.getText().trim();
+            String password = new String(passwordField.getPassword()).trim();
+
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Username or password cannot be empty.");
+                return;
+            }
+
+            loginController.login(username, password);
+        });
+
+
+        loginViewModel.addPropertyChangeListener(evt -> {
+            if ("state".equals(evt.getPropertyName())) {
+                String message = loginViewModel.getState().getMessage();
+                if (message.contains("Welcome")) {
+                    JOptionPane.showMessageDialog(frame, message);
+                    frame.dispose();
+                    new MainMenuView();
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Login failed: " + message);
+                }
+            }
+        });
 
         signUpLabel.setFont(new Font("Times New Roman", Font.PLAIN, 20));
         signUpLabel.setBounds(400, 50, 100, 30);
@@ -112,19 +125,28 @@ public class LoginAndSignupView {
         signUpButton.setForeground(new Color(70, 130, 180));
 
         signUpButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        signUpButton.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        String signupUsername = newUsernameField.getText();
-                        String signupPassword = newPasswordField.getText();
-                        if (signupController.signup(signupUsername, signupPassword)) {
-                            JOptionPane.showMessageDialog(frame, signupPresenter.prepareSuccessMessage());
-                            frame.dispose();
-                            new MainMenuView();
-                        } else {
-                            JOptionPane.showMessageDialog(frame, signupPresenter.prepareFailureMessage());
-                        }
-                    }
+        signUpButton.addActionListener(e -> {
+            String username = newUsernameField.getText();
+            String password = new String(newPasswordField.getPassword());
+            if (username.isEmpty() || password.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Username or password cannot be empty.");
+                return;
+            }
+            signupController.signup(username, password);
+        });
+
+        signupViewModel.addPropertyChangeListener(evt -> {
+            if ("state".equals(evt.getPropertyName())) {
+                String message = signupViewModel.getState().getMessage();
+                if (message.contains("Welcome")) {
+                    JOptionPane.showMessageDialog(frame, message);
+                    frame.dispose();
+                    new MainMenuView();
+                }
+                else {
+                    JOptionPane.showMessageDialog(frame, "Signup failed: " + message);
+                }
+            }
         });
 
         panel.add(loginLabel);

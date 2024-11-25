@@ -1,5 +1,6 @@
 package interface_adapter.login;
 
+import use_case.login.LoginInputData;
 import use_case.login.LoginInteractor;
 
 public class LoginController {
@@ -9,7 +10,8 @@ public class LoginController {
         this.loginInteractor = loginInteractor;
     }
 
-    public boolean login(String username, String password) {
-        return loginInteractor.login(username, password);
+    public void login(String username, String password) {
+        LoginInputData loginInputData = new LoginInputData(username, password);
+        loginInteractor.execute(loginInputData);
     }
 }

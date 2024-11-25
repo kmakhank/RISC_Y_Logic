@@ -1,17 +1,25 @@
 package use_case.login;
 
-import data_access.UserRepository;
+import data_access.InMemoryUserRepository;
 import entity.User;
 
-public class LoginInteractor {
-    private final UserRepository userRepository;
+public class LoginInteractor implements LoginInputBoundary {
+    private final LoginDataAccessInterface userRepository;
+    private final LoginOutputBoundary loginOutputBoundary;
 
-    public LoginInteractor(UserRepository userRepository) {
+    public LoginInteractor(InMemoryUserRepository userRepository, LoginOutputBoundary loginOutputBoundary) {
         this.userRepository = userRepository;
+        this.loginOutputBoundary = loginOutputBoundary;
     }
 
-    public boolean login(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        return user != null && user.getPassword().equals(password);
+    @Override
+    public void execute (LoginInputData loginInputData) {
+        User user = userRepository.findByName(loginInputData.getUsername());
+        if (user != null && user.getPassword().equals(loginInputData.getPassword())) {
+            loginOutputBoundary.prepareMessage(new LoginOutputData(user.getUsername(), false));
+        }
+        else {
+            loginOutputBoundary.prepareMessage(new LoginOutputData(null, true));
+        }
     }
 }
