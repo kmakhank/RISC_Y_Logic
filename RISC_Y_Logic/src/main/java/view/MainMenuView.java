@@ -1,8 +1,12 @@
 package view;
 
+import data_access.InMemoryScheduleRepository;
+import interface_adapter.add_course_schedule.AddCourseScheduleController;
+import interface_adapter.add_course_schedule.AddCourseSchedulePresenter;
 import interface_adapter.mainmenu.MainMenuBackButtonController;
 import interface_adapter.mainmenu.MainMenuCalendarController;
 import interface_adapter.mainmenu.MainMenuEventsController;
+import use_case.add_course_schedule.AddCourseScheduleInteractor;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -35,7 +39,14 @@ public class MainMenuView {
         centrePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
         centrePanel.setBackground(new Color(245, 245, 245));
 
-        MainMenuCalendarController calendarController = new MainMenuCalendarController();
+        InMemoryScheduleRepository repository = new InMemoryScheduleRepository();
+        AddCourseSchedulePresenter presenter = new AddCourseSchedulePresenter();
+        AddCourseScheduleInteractor interactor = new AddCourseScheduleInteractor(repository, presenter);
+        AddCourseScheduleController courseScheduleController = new AddCourseScheduleController(interactor);
+
+
+        MainMenuCalendarController calendarController = new MainMenuCalendarController(repository, courseScheduleController);
+
         calendarButton.setPreferredSize(new Dimension(120, 50));
         calendarButton.setBackground(new Color(70, 130, 180));
         calendarButton.setForeground(Color.BLACK);
