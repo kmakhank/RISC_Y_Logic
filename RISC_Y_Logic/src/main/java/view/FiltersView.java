@@ -21,12 +21,9 @@ public class FiltersView extends JPanel {
     private final JTextField DateInputField = new JTextField(15);
     private final JTextField TimeInputField = new JTextField(15);
 
-    private final JButton back = new JButton("Back");
-
     public FiltersView() {
         final JLabel title = new JLabel("Filters");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setSize(100, 100);
 
         final LabelTextPanel interestsInfo = new LabelTextPanel(
                 new JLabel("Interests: "), interestsInputField);
@@ -35,25 +32,12 @@ public class FiltersView extends JPanel {
         final LabelTextPanel TimeInfo = new LabelTextPanel(
                 new JLabel("Time: "), TimeInputField);
 
-        final JPanel buttons = new JPanel();
-        buttons.add(back);
-
-        back.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        if(e.getSource().equals(back)) {
-                        }
-                    }
-                }
-        );
-
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         this.add(title);
         this.add(interestsInfo);
         this.add(DateInfo);
         this.add(TimeInfo);
-        this.add(buttons);
     }
 
     public String getViewName() {
