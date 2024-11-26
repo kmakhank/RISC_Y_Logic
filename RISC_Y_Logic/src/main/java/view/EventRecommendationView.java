@@ -2,17 +2,23 @@ package view;
 
 import javax.swing.*;
 
-public class EventRecommendationView extends JPanel {
+public class EventRecommendationView {
+    private final JFrame frame = new JFrame("Event Recommendation");
     private final String viewName = "Event Recommendation";
 
-    private final FiltersView filters = new FiltersView();
-    private final SearchResultsView searchResults = new SearchResultsView();
+    private final JPanel filters = new FiltersView();
+    private final JPanel searchResults = new SearchResultsView();
 
     public EventRecommendationView() {
-        this.add(filters);
-        this.add(searchResults);
+        final JPanel view = new JPanel();
+        view.add(filters);
+        view.add(searchResults);
 
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        view.setLayout(new BoxLayout(view, BoxLayout.X_AXIS));
+
+        frame.add(view);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     public String getViewName() {
