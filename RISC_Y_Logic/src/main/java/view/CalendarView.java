@@ -22,9 +22,8 @@ public class CalendarView {
     JPanel rightPanel = new JPanel();
     JButton previousButton = new JButton("<");
     JButton nextButton = new JButton(">");
-    JButton addEventButton = new JButton("Add Event");
-    JButton addCourseScheduleButton = new JButton("Add Course Schedule");
-    JButton backButton = new JButton("Back");
+    JButton addEventButton = new StyleButton("Add Event");
+    JButton addCourseScheduleButton = new StyleButton("Add Course Schedule");
 
     Map<LocalDate, List<CourseSchedule>> dateToScheduleMap = new HashMap<>();
     Map<String, CourseSchedule> courseSchedules = new HashMap<>();
@@ -32,7 +31,6 @@ public class CalendarView {
     public CalendarView() {
 
         frame.setSize(1000, 800);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
         headerPanel.setBackground(new Color(70, 130, 180));
@@ -71,22 +69,19 @@ public class CalendarView {
                     updateCalendar(year[0], month[0], monthLabel, calendarPanel, dateToScheduleMap);
                 });
 
-        styleButton(addEventButton);
-        styleButton(addCourseScheduleButton);
-        addCourseScheduleButton.addActionListener(e -> new AddCourseScheduleView(dateToScheduleMap, courseSchedules));
+        addEventButton.addActionListener(e -> new AddUserEventView());
 
-        styleButton(backButton);
+        addCourseScheduleButton.addActionListener(e -> new AddCourseScheduleView(dateToScheduleMap, courseSchedules));
 
         headerPanel.setLayout(new BorderLayout());
         headerPanel.add(previousButton, BorderLayout.WEST);
         headerPanel.add(monthLabel, BorderLayout.CENTER);
         headerPanel.add(nextButton, BorderLayout.EAST);
 
-        rightPanel.setLayout(new GridLayout(3, 1, 5, 5));
+        rightPanel.setLayout(new GridLayout(2, 1, 5, 5));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         rightPanel.add(addEventButton);
         rightPanel.add(addCourseScheduleButton);
-        rightPanel.add(backButton);
 
         frame.add(headerPanel, BorderLayout.NORTH);
         frame.add(calendarPanel, BorderLayout.CENTER);
@@ -96,12 +91,6 @@ public class CalendarView {
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    private void styleButton(JButton button) {
-        button.setFont(new Font("SansSerif", Font.PLAIN, 18));
-        button.setBackground(new Color(173, 216, 230));
-        button.setFocusPainted(false);
     }
 
     private static void updateCalendar(int year, int month, JLabel monthLabel, JPanel calendarPanel, Map<LocalDate, List<CourseSchedule>> dateToScheduleMap) {
