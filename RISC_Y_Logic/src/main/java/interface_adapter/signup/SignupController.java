@@ -1,15 +1,18 @@
 package interface_adapter.signup;
 
+import use_case.signup.SignupInputData;
 import use_case.signup.SignupInteractor;
 
 public class SignupController {
-    private final SignupInteractor sighupInteractor;
+    private final SignupInteractor signupInteractor;
 
-    public SignupController(SignupInteractor sighupInteractor) {
-        this.sighupInteractor = sighupInteractor;
+    public SignupController(SignupInteractor signupInteractor) {
+        this.signupInteractor = signupInteractor;
     }
 
-    public boolean signup(String username, String password) {
-        return sighupInteractor.signup(username, password);
+    public void signup(String username, String password) {
+        SignupInputData signupInputData =
+                new SignupInputData(username, password);
+        signupInteractor.execute(signupInputData);
     }
 }

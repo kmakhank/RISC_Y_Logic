@@ -1,10 +1,10 @@
-package entity;
+package use_case.login;
 
-public class User {
-    private String username;
-    private String password;
+public class LoginInputData {
+    private final String username;
+    private final String password;
 
-    public User(String username, String password) {
+    public LoginInputData(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -16,5 +16,4 @@ public class User {
     public String getPassword() {
         return password;
     }
-
 }

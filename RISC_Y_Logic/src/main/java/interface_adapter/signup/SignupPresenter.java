@@ -1,11 +1,21 @@
 package interface_adapter.signup;
 
-public class SignupPresenter {
-    public String prepareSuccessMessage() {
-        return "Signup successful!";
+import use_case.signup.SignupOutputBoundary;
+import use_case.signup.SignupOutputData;
+
+public class SignupPresenter implements SignupOutputBoundary {
+    private final SignupViewModel viewModel;
+
+    public SignupPresenter(SignupViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
-    public String prepareFailureMessage() {
-        return "Username already exists.";
+    public void prepareMessage(SignupOutputData signupOutputData) {
+        if (signupOutputData.isUseCaseFailed()) {
+            viewModel.onSignupFailure("User name already taken");
+        }
+        else {
+            viewModel.onSignupSuccess(signupOutputData.getUsername());
+        }
     }
 }

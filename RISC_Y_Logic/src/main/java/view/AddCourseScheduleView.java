@@ -1,25 +1,69 @@
 package view;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
+import interface_adapter.add_course_schedule.AddCourseScheduleController;
+import data_access.InMemoryScheduleRepository;
+import interface_adapter.add_course_schedule.AddCourseSchedulePresenter;
+import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
+import use_case.add_course_schedule.AddCourseScheduleInteractor;
+
+import javax.swing.*;
+import java.awt.*;
+import java.time.LocalTime;
 
 public class AddCourseScheduleView {
-    JFrame frame = new JFrame("Add Course Schedule Page");
-    JButton uploadCourseScheduleButton = new JButton("Upload Course Schedule");
-    JButton backButton = new JButton("Back");
 
-    public AddCourseScheduleView() {
-        frame.setSize(500, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(null);
+    private AddCourseScheduleDataAccessInterface repository;
+    private AddCourseSchedulePresenter presenter;
+    private AddCourseScheduleInteractor interactor;
+    private AddCourseScheduleController controller;
 
-        uploadCourseScheduleButton.setBounds(210, 50, 100, 80);
+    public AddCourseScheduleView(AddCourseScheduleDataAccessInterface repository, AddCourseScheduleController controller) {
 
-        backButton.setBounds(210, 200, 100, 80);
+        this.repository = repository;
+        this.controller = controller;
 
-        frame.add(uploadCourseScheduleButton);
-        frame.add(backButton);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+
+        JFrame frame = new JFrame("Add Course Schedule");
+        JPanel panel = new JPanel(new GridLayout(0, 2));
+
+        panel.add(new JLabel("Day of the Week (e.g., Monday):"));
+        JTextField dayField = new JTextField();
+        panel.add(dayField);
+
+        panel.add(new JLabel("Course Name:"));
+        JTextField courseNameField = new JTextField();
+        panel.add(courseNameField);
+
+        panel.add(new JLabel("Start Time (HH:mm):"));
+        JTextField startTimeField = new JTextField();
+        panel.add(startTimeField);
+
+        panel.add(new JLabel("End Time (HH:mm):"));
+        JTextField endTimeField = new JTextField();
+        panel.add(endTimeField);
+
+        panel.add(new JLabel("Semester:"));
+        String[] semesters = {"Fall", "Winter", "Summer"};
+        JComboBox<String> semesterComboBox = new JComboBox<>(semesters);
+        panel.add(semesterComboBox);
+
+        int result = JOptionPane.showConfirmDialog(frame, panel, "Add Course Schedule", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                String day = dayField.getText().trim();
+                String courseName = courseNameField.getText().trim();
+                String startTime = startTimeField.getText().trim();
+                String endTime = endTimeField.getText().trim();
+                String semester = (String) semesterComboBox.getSelectedItem();
+
+                LocalTime startTimeInLocalTime = LocalTime.parse(startTime);
+                LocalTime endTimeInLocalTime = LocalTime.parse(endTime);
+
+                controller.execute(courseName, day, startTimeInLocalTime , startTimeInLocalTime , semester);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(frame, "Error: " + e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
