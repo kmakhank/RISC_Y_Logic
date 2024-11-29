@@ -91,10 +91,10 @@ public class MeetupGraphQLClient {
                             (System.getenv("MEETUP_ACCESS_TOKEN"));
 
             // Search for events near Toronto
-            String result = client.searchEvents("Water Polo", 43.8, -79.4, 100);
+            String result = client.searchEvents("Java Clean Architecture", 43.8, -79.4, 100);
             System.out.println(result);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }
