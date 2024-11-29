@@ -49,6 +49,8 @@ public class LoginAndSignupView {
     JLabel loginLabel = new JLabel("Login");
     JLabel username = new JLabel("Username:");
     JLabel password = new JLabel("Password:");
+
+
     JTextField usernameField = new JTextField();
     JPasswordField passwordField = new JPasswordField();
     JButton loginButton = new JButton("Login");

@@ -1,11 +1,8 @@
 package use_case.add_course_schedule;
 
 import data_access.InMemoryScheduleRepository;
-import data_access.InMemoryUserRepository;
 import interface_adapter.add_course_schedule.AddCourseSchedulePresenter;
-import interface_adapter.login.LoginPresenter;
 import org.junit.Test;
-import use_case.login.LoginOutputBoundary;
 
 import java.time.LocalTime;
 
