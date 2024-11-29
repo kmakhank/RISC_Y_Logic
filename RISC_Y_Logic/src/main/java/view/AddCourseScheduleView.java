@@ -1,10 +1,7 @@
 package view;
 
 import interface_adapter.add_course_schedule.AddCourseScheduleController;
-import data_access.InMemoryScheduleRepository;
-import interface_adapter.add_course_schedule.AddCourseSchedulePresenter;
 import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
-import use_case.add_course_schedule.AddCourseScheduleInteractor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +10,6 @@ import java.time.LocalTime;
 public class AddCourseScheduleView {
 
     private AddCourseScheduleDataAccessInterface repository;
-    private AddCourseSchedulePresenter presenter;
-    private AddCourseScheduleInteractor interactor;
     private AddCourseScheduleController controller;
 
     public AddCourseScheduleView(AddCourseScheduleDataAccessInterface repository, AddCourseScheduleController controller) {
@@ -60,7 +55,7 @@ public class AddCourseScheduleView {
                 LocalTime startTimeInLocalTime = LocalTime.parse(startTime);
                 LocalTime endTimeInLocalTime = LocalTime.parse(endTime);
 
-                controller.execute(courseName, day, startTimeInLocalTime , startTimeInLocalTime , semester);
+                controller.execute(courseName, day, startTimeInLocalTime , endTimeInLocalTime , semester);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(frame, "Error: " + e.getMessage(), "Input Error", JOptionPane.ERROR_MESSAGE);
             }
