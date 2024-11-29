@@ -1,38 +1,58 @@
 package view;
 
-import interface_adapter.add_course_schedule.AddCourseScheduleController;
+import entity.CalendarDay;
 import entity.CourseSchedule;
+import interface_adapter.add_course_schedule.AddCourseScheduleController;
+import interface_adapter.calendar.CalendarNextButtonController;
+import interface_adapter.calendar.CalendarPresenter;
+import interface_adapter.calendar.CalendarPreviousButtonController;
 import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
+import use_case.calendar.CalendarInputBoundary;
+import use_case.calendar.CalendarInputData;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.util.*;
 import java.util.List;
+import java.util.Calendar;
+import java.util.Map;
 
 public class CalendarView {
 
     private final AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface;
     private final AddCourseScheduleController addCourseScheduleController;
+    private final CalendarInputBoundary calendarInteractor;
+    private final CalendarPresenter calendarPresenter;
 
-    private final Calendar calendar = Calendar.getInstance();
-    private final int[] year = {calendar.get(Calendar.YEAR)};
-    private final int[] month = {calendar.get(Calendar.MONTH)};
+    private final CalendarPreviousButtonController calendarPreviousButtonController;
+    private final CalendarNextButtonController calendarNextButtonController;
+
+    private final int[] year = {Calendar.getInstance().get(Calendar.YEAR)};
+    private final int[] month = {Calendar.getInstance().get(Calendar.MONTH)};
     private final JFrame frame = new JFrame("Calendar Page");
     private final JPanel headerPanel = new JPanel();
-    private final JLabel monthLabel = new JLabel();
+    private final JLabel monthLabel = CalendarUIComponentFactory.createLabel("", 24, Color.WHITE);
     private final JPanel calendarPanel = new JPanel();
     private final JPanel rightPanel = new JPanel();
-    private final JButton previousButton = new JButton("<");
-    private final JButton nextButton = new JButton(">");
+    private final JButton previousButton = CalendarUIComponentFactory.createButton("<", 18, Color.WHITE);
+    private final JButton nextButton = CalendarUIComponentFactory.createButton(">", 18, Color.WHITE);
     JButton addEventButton = new StyleButton("Add Event");
     JButton addCourseScheduleButton = new StyleButton("Add Course Schedule");
 
-    public CalendarView(AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface, AddCourseScheduleController addCourseScheduleController) {
+    public CalendarView(CalendarInputBoundary calendarInputBoundary,
+                        CalendarPresenter calendarPresenter,
+                        AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface,
+                        AddCourseScheduleController addCourseScheduleController) {
+
         this.addCourseScheduleDataAccessInterface = addCourseScheduleDataAccessInterface;
         this.addCourseScheduleController = addCourseScheduleController;
+        this.calendarInteractor = calendarInputBoundary;
+        this.calendarPresenter = calendarPresenter;
+
+        this.calendarPreviousButtonController = new CalendarPreviousButtonController(calendarInputBoundary, year, month);
+        this.calendarNextButtonController = new CalendarNextButtonController(calendarInputBoundary, year, month);
 
         initializeUI();
     }
@@ -44,31 +64,13 @@ public class CalendarView {
         headerPanel.setBackground(new Color(70, 130, 180));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        monthLabel.setHorizontalAlignment(JLabel.CENTER);
-        monthLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
-        monthLabel.setForeground(Color.WHITE);
-
-        previousButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        previousButton.setBackground(Color.WHITE);
-        previousButton.setFocusPainted(false);
         previousButton.addActionListener(e -> {
-            month[0] = month[0] - 1;
-            if (month[0] < 0) {
-                month[0] = 11;
-                year[0] = year[0] - 1;
-            }
+            calendarPreviousButtonController.handlePreviousButtonClick();
             updateCalendar(year[0], month[0]);
         });
 
-        nextButton.setFont(new Font("SansSerif", Font.BOLD, 18));
-        nextButton.setBackground(new Color(255, 255, 255));
-        nextButton.setFocusPainted(false);
         nextButton.addActionListener(e -> {
-            month[0] = month[0] + 1;
-            if (month[0] >= 12) {
-                month[0] = 0;
-                year[0] = year[0] + 1;
-            }
+            calendarNextButtonController.handleNextButtonClick();
             updateCalendar(year[0], month[0]);
         });
 
@@ -78,7 +80,6 @@ public class CalendarView {
         headerPanel.add(nextButton, BorderLayout.EAST);
 
         calendarPanel.setLayout(new GridLayout(0, 7));
-
         calendarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         addEventButton.addActionListener(e -> new AddUserEventView());
@@ -87,6 +88,7 @@ public class CalendarView {
 
         rightPanel.setLayout(new GridLayout(2, 1, 5, 5));
         rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         rightPanel.add(addEventButton);
         rightPanel.add(addCourseScheduleButton);
 
@@ -101,64 +103,85 @@ public class CalendarView {
     }
 
     private void updateCalendar(int year, int month) {
-        calendarPanel.removeAll();
-
-        Calendar calendar = new GregorianCalendar(year, month, 1);
-        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        String[] monthNames = {
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+        };
         monthLabel.setText(monthNames[month] + " " + year);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, 1);
+
+        calendarInteractor.generate(new CalendarInputData(year, month));
+
+        List<CalendarDay> calendarDays = calendarPresenter.getCalendarDays();
+        renderCalendarWithOffset(calendarDays);
+    }
+
+    private void renderCalendarWithOffset(List<CalendarDay> calendarDays) {
+        calendarPanel.removeAll();
 
         String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
         for (String day : daysOfWeek) {
-            JLabel dayLabel = new JLabel(day, JLabel.CENTER);
-            dayLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-            dayLabel.setForeground(new Color(70, 132, 180));
+            JLabel dayLabel = CalendarUIComponentFactory.createLabel(day, 16, new Color(70, 132, 180));
             calendarPanel.add(dayLabel);
         }
 
-        int startDay = calendar.get(Calendar.DAY_OF_WEEK);
-        int numberOfDays = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-        for (int i = 1; i < startDay; i++) {
-            calendarPanel.add(new JLabel(""));
-        }
-
-        for (int day = 1; day <= numberOfDays; day++) {
-            LocalDate currentDate = LocalDate.of(year, month + 1, day);
-            JLabel dayLabel = new JLabel(String.valueOf(day), JLabel.CENTER);
-            dayLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-            dayLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-
-            if ((startDay + day - 2) % 7 == 0 || (startDay + day - 2) % 7 == 6) {
-                dayLabel.setOpaque(true);
-                dayLabel.setBackground(new Color(255, 228, 225));
-            }
-
-            dayLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    Map<LocalDate, List<CourseSchedule>> dateToScheduleMap = addCourseScheduleDataAccessInterface.getDayToScheduleMap();
-                    List<CourseSchedule> schedules = dateToScheduleMap.get(currentDate);
-                    if (schedules != null && !schedules.isEmpty()) {
-                        StringBuilder message = new StringBuilder();
-                        message.append("Courses and Events on ").append(currentDate).append(":\n");
-                        for (CourseSchedule schedule : schedules) {
-                            message.append("Course Name: ").append(schedule.getInstanceName()).append("\n");
-                            schedule.getInstanceDateAndTimeSlot().get(currentDate).forEach(slot -> {
-                                message.append("Start Time: ").append(slot.getStartTime())
-                                        .append(", End Time: ").append(slot.getEndTime()).append("\n");
-                            });
-                        }
-                        JOptionPane.showMessageDialog(dayLabel, message.toString());
-                    } else {
-                        JOptionPane.showMessageDialog(dayLabel, "No courses or events on this date.");
-                    }
-                }
-            });
-
+        for (CalendarDay day : calendarDays) {
+            JLabel dayLabel = createDayLabel(day);
             calendarPanel.add(dayLabel);
         }
 
         calendarPanel.revalidate();
         calendarPanel.repaint();
     }
+
+    private JLabel createDayLabel(CalendarDay day) {
+        JLabel dayLabel = CalendarUIComponentFactory.createLabel(
+                day.isEmpty() ? "" : String.valueOf(day.getDay().getDayOfMonth()),
+                16, Color.BLACK
+        );
+
+        if (!day.isEmpty()) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(day.getDay().getYear(), day.getDay().getMonthValue() - 1, day.getDay().getDayOfMonth());
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+            if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+                dayLabel.setOpaque(true);
+                dayLabel.setBackground(new Color(255, 228, 225));
+            }
+            dayLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        }
+
+        if (!day.isEmpty()) {
+            dayLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    showSchedules(day);
+                }
+            });
+        }
+
+        return dayLabel;
+    }
+
+    private void showSchedules(CalendarDay day) {
+        Map<LocalDate, List<CourseSchedule>> dayToScheduleMap = addCourseScheduleDataAccessInterface.getDayToScheduleMap();
+        if (dayToScheduleMap.containsKey(day.getDay())) {
+            StringBuilder message = new StringBuilder("Courses and Events on " + day.getDay() + ":\n");
+            List<CourseSchedule> courseScheduleList = dayToScheduleMap.get(day.getDay());
+            courseScheduleList.forEach(schedule -> {
+                message.append("Course Name: ").append(schedule.getInstanceName()).append("\n");
+                schedule.getInstanceDateAndTimeSlot().get(day.getDay()).forEach(slot -> {
+                    message.append("Start Time: ").append(slot.getStartTime())
+                            .append(", End Time: ").append(slot.getEndTime()).append("\n");
+                });
+            });
+            JOptionPane.showMessageDialog(frame, message.toString());
+        } else {
+            JOptionPane.showMessageDialog(frame, "No courses or events on this date.");
+        }
+    }
 }
+
