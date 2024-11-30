@@ -129,16 +129,12 @@ public class CalendarView {
             dayLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    List<CourseSchedule> schedules = dateToScheduleMap.get(currentDate);
-                    if (schedules != null && !schedules.isEmpty()) {
+                    List<CourseSchedule> courseSchedules = dateToScheduleMap.get(currentDate);
+                    if (courseSchedules != null && !courseSchedules.isEmpty()) {
                         StringBuilder message = new StringBuilder();
                         message.append("Courses and Events on ").append(currentDate).append(":\n");
-                        schedules.forEach(schedule -> {
-                            message.append("Course Name: ").append(schedule.getInstanceName()).append("\n");
-                            schedule.getInstanceDateAndTimeSlot().get(currentDate).forEach(slot -> {
-                                message.append("Start Time: ").append(slot.getStartTime())
-                                        .append(", End Time: ").append(slot.getEndTime()).append("\n");
-                            });
+                        courseSchedules.forEach(courseSchedule -> {
+                            message.append(courseSchedule.toString(currentDate)).append("\n");
                         });
                         JOptionPane.showMessageDialog(dayLabel, message.toString());
                     } else {
