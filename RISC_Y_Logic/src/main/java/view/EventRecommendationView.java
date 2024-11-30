@@ -6,8 +6,8 @@ public class EventRecommendationView {
     private final JFrame frame = new JFrame("Event Recommendation");
     private final String viewName = "Event Recommendation";
 
-    private final JPanel filters = new FiltersView();
-    private final JPanel searchResults = new SearchResultsView();
+    private final JPanel filters = new FiltersPanel();
+    private final JPanel searchResults = new SearchResultsPanel();
 
     public EventRecommendationView() {
         final JPanel view = new JPanel();

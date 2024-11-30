@@ -1,6 +1,6 @@
 package view;
 
-import interface_adapter.add_event.AddEventController;
+import interface_adapter.add_event.AddUserEventController;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,13 +12,13 @@ public class AddUserEventView {
     private final JFrame frame = new JFrame("Add Your Own Event");
 
     private final JTextField eventNameInputField = new JTextField(15);
+    private final JTextField eventDateInputField = new PlaceholderTextField(15, "yyyy-mm-dd");
+    private final JTextField eventTimeInputField = new PlaceholderTextField(15, "hh:mm~hh:mm");
     private final JTextField eventDescriptionInputField = new JTextField(15);
-    private final JTextField eventDateInputField = new JTextField(15);
-    private final JTextField eventTimeInputField = new JTextField(15);
 
     private final JList<String> tagsInputField = new JList<>();
 
-    private AddEventController addEventController;
+    private AddUserEventController addUserEventController;
 
     private final JButton addEvent = new JButton("Add Event");
 
@@ -46,7 +46,7 @@ public class AddUserEventView {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         if(e.getSource().equals(addEvent)) {
-                            addEventController.execute(
+                            addUserEventController.execute(
                                     eventNameInputField.getText(),
                                     eventDateInputField.getText(),
                                     eventTimeInputField.getText(),
@@ -73,7 +73,7 @@ public class AddUserEventView {
         frame.setVisible(true);
     }
 
-    public void setAddEventController(AddEventController addEventController) {
-        this.addEventController = addEventController;
+    public void setAddUserEventController(AddUserEventController addUserEventController) {
+        this.addUserEventController = addUserEventController;
     }
 }
