@@ -2,7 +2,6 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Set;
 
 public class EventSchedule {
@@ -46,7 +45,7 @@ public class EventSchedule {
         return source;
     }
 
-    public String toString(LocalDate date) {
+    public String toString() {
         return "Event Name : " + name + "\nEvent Time : " + timeSlot.toString();
     }
 }

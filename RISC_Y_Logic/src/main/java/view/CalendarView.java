@@ -3,10 +3,13 @@ package view;
 import entity.CalendarDay;
 import entity.CourseSchedule;
 import interface_adapter.add_course_schedule.AddCourseScheduleController;
+import interface_adapter.add_event.AddRecommendEventController;
+import interface_adapter.add_event.AddUserEventController;
 import interface_adapter.calendar.CalendarNextButtonController;
 import interface_adapter.calendar.CalendarPresenter;
 import interface_adapter.calendar.CalendarPreviousButtonController;
 import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
+import use_case.add_event.AddEventDataAccessInterface;
 import use_case.calendar.CalendarInputBoundary;
 import use_case.calendar.CalendarInputData;
 
@@ -21,10 +24,13 @@ import java.util.Map;
 
 public class CalendarView {
 
-    private final AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface;
-    private final AddCourseScheduleController addCourseScheduleController;
     private final CalendarInputBoundary calendarInteractor;
     private final CalendarPresenter calendarPresenter;
+    private final AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface;
+    private final AddCourseScheduleController addCourseScheduleController;
+    private final AddEventDataAccessInterface addEventDataAccessInterface;
+    private final AddUserEventController addUserEventController;
+    private final AddRecommendEventController addRecommendEventController;
 
     private final CalendarPreviousButtonController calendarPreviousButtonController;
     private final CalendarNextButtonController calendarNextButtonController;
@@ -44,12 +50,18 @@ public class CalendarView {
     public CalendarView(CalendarInputBoundary calendarInputBoundary,
                         CalendarPresenter calendarPresenter,
                         AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface,
-                        AddCourseScheduleController addCourseScheduleController) {
+                        AddCourseScheduleController addCourseScheduleController,
+                        AddEventDataAccessInterface addEventDataAccessInterface,
+                        AddUserEventController addUserEventController,
+                        AddRecommendEventController addRecommendEventController) {
 
-        this.addCourseScheduleDataAccessInterface = addCourseScheduleDataAccessInterface;
-        this.addCourseScheduleController = addCourseScheduleController;
         this.calendarInteractor = calendarInputBoundary;
         this.calendarPresenter = calendarPresenter;
+        this.addCourseScheduleDataAccessInterface = addCourseScheduleDataAccessInterface;
+        this.addCourseScheduleController = addCourseScheduleController;
+        this.addEventDataAccessInterface = addEventDataAccessInterface;
+        this.addUserEventController = addUserEventController;
+        this.addRecommendEventController = addRecommendEventController;
 
         this.calendarPreviousButtonController = new CalendarPreviousButtonController(calendarInputBoundary, year, month);
         this.calendarNextButtonController = new CalendarNextButtonController(calendarInputBoundary, year, month);
@@ -82,7 +94,7 @@ public class CalendarView {
         calendarPanel.setLayout(new GridLayout(0, 7));
         calendarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        addEventButton.addActionListener(e -> new AddUserEventView());
+        addEventButton.addActionListener(e -> new AddUserEventView(addUserEventController));
 
         addCourseScheduleButton.addActionListener(e -> new AddCourseScheduleView(addCourseScheduleDataAccessInterface, addCourseScheduleController));
 
