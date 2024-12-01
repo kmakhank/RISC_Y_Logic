@@ -4,16 +4,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class CalendarDay {
-    private final LocalDate day;
+    private final LocalDate date;
     private final List<CourseSchedule> schedules;
 
     public CalendarDay(LocalDate day, List<CourseSchedule> schedules) {
-        this.day = day;
+        this.date = day;
         this.schedules = schedules;
     }
 
-    public LocalDate getDay() {
-        return day;
+    public LocalDate getDate() {
+        return date;
     }
 
     public List<CourseSchedule> getSchedules() {
@@ -21,6 +21,6 @@ public class CalendarDay {
     }
 
     public boolean isEmpty() {
-        return day == null;
+        return date == null;
     }
 }

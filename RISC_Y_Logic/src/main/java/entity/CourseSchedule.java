@@ -24,10 +24,9 @@ public class CourseSchedule implements ScheduleInterface {
     }
 
     public String toString(LocalDate date) {
-        String timeslots = schedule.get(date).get(0).toString();
-        for(int i = 1; i < schedule.get(date).size(); i++) {
-            timeslots += ", " + schedule.get(date).get(i).toString();
-        }
-        return "Course Name : " + courseName + "\nCourse Time : " + timeslots;
+        StringBuilder result = new StringBuilder();
+        result.append("Course Name: ").append(courseName).append("\n  Course Time:");
+        schedule.get(date).forEach(timeSlot -> result.append("    ").append(timeSlot.toString()).append("\n"));
+        return result.toString();
     }
 }

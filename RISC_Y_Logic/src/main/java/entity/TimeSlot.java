@@ -25,6 +25,6 @@ public class TimeSlot {
     }
 
     public String toString() {
-        return startTime + " ~ " + endTime;
+        return startTime + "~" + endTime;
     }
 }

@@ -5,7 +5,7 @@ import interface_adapter.add_event.AddRecommendEventController;
 import interface_adapter.add_event.AddUserEventController;
 import interface_adapter.calendar.CalendarPresenter;
 import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
-import use_case.add_event.AddEventDataAccessInterface;
+import use_case.add_event.AddEventScheduleDataAccessInterface;
 import use_case.calendar.CalendarInputBoundary;
 import view.CalendarView;
 
@@ -15,7 +15,7 @@ public class MainMenuCalendarController{
     private final CalendarPresenter calendarPresenter;
     private final AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface;
     private final AddCourseScheduleController addCourseScheduleController;
-    private final AddEventDataAccessInterface addEventDataAccessInterface;
+    private final AddEventScheduleDataAccessInterface addEventDataAccessInterface;
     private final AddUserEventController addUserEventController;
     private final AddRecommendEventController addRecommendEventController;
 
@@ -23,7 +23,7 @@ public class MainMenuCalendarController{
                                       CalendarPresenter calendarPresenter,
                                       AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface,
                                       AddCourseScheduleController addCourseScheduleController,
-                                      AddEventDataAccessInterface addEventDataAccessInterface,
+                                      AddEventScheduleDataAccessInterface addEventDataAccessInterface,
                                       AddUserEventController addUserEventController,
                                       AddRecommendEventController addRecommendEventController) {
 
@@ -37,6 +37,6 @@ public class MainMenuCalendarController{
     }
 
     public void click() {
-        new CalendarView(calendarInputBoundary, calendarPresenter, addCourseScheduleDataAccessInterface, addCourseScheduleController, addEventDataAccessInterface, addUserEventController, addRecommendEventController);
+        new CalendarView(calendarInputBoundary, calendarPresenter, addCourseScheduleDataAccessInterface, addCourseScheduleController, addEventDataAccessInterface, addUserEventController);
     }
 }

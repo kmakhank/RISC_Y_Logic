@@ -8,15 +8,14 @@ import interface_adapter.StringFormatChecker;
 import interface_adapter.add_event.AddEventPresenter;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Set;
 
 public class AddEventInteractor {
-    private final AddEventDataAccessInterface eventDataAccessObject;
+    private final AddEventScheduleDataAccessInterface eventDataAccessObject;
     private final AddEventPresenter addEventPresenter;
     private final EventFactory eventFactory;
 
-    public AddEventInteractor(AddEventDataAccessInterface eventDataAccessObject,
+    public AddEventInteractor(AddEventScheduleDataAccessInterface eventDataAccessObject,
                               AddEventPresenter newEventPresenter,
                               EventFactory eventFactory) {
         this.eventDataAccessObject = eventDataAccessObject;
