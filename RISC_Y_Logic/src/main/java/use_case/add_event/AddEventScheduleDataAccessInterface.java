@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-public interface AddEventDataAccessInterface {
+public interface AddEventScheduleDataAccessInterface {
 
     void saveEventSchedule(EventSchedule eventSchedule, LocalDate date);
 

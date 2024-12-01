@@ -10,7 +10,7 @@ public interface AddCourseScheduleDataAccessInterface {
 
     void saveCourseSchedule(CourseSchedule courseSchedule, List<LocalDate> dates);
 
-    Map<LocalDate, List<CourseSchedule>> getDayToScheduleMap();
+    Map<LocalDate, List<CourseSchedule>> getDayToCourseScheduleMap();
 
     Map<String, CourseSchedule> getCourseSchedules();
 }

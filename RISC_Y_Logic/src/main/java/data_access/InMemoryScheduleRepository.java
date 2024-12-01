@@ -3,7 +3,7 @@ package data_access;
 import entity.CourseSchedule;
 import entity.EventSchedule;
 import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
-import use_case.add_event.AddEventDataAccessInterface;
+import use_case.add_event.AddEventScheduleDataAccessInterface;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InMemoryScheduleRepository implements AddCourseScheduleDataAccessInterface, AddEventDataAccessInterface {
+public class InMemoryScheduleRepository implements AddCourseScheduleDataAccessInterface, AddEventScheduleDataAccessInterface {
 
     private final Map<LocalDate, List<CourseSchedule>> dateToCourseScheduleMap =  new HashMap<>();
     private final Map<String, CourseSchedule> courseSchedules = new HashMap<>();
@@ -36,7 +36,7 @@ public class InMemoryScheduleRepository implements AddCourseScheduleDataAccessIn
     }
 
     @Override
-    public Map<LocalDate, List<CourseSchedule>> getDayToScheduleMap() {
+    public Map<LocalDate, List<CourseSchedule>> getDayToCourseScheduleMap() {
         return dateToCourseScheduleMap;
     }
 

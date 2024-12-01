@@ -46,6 +46,6 @@ public class EventSchedule {
     }
 
     public String toString() {
-        return "Event Name : " + name + "\nEvent Time : " + timeSlot.toString();
+        return "Event Name: " + name + "\n  Event Time:\n    " + timeSlot.toString();
     }
 }

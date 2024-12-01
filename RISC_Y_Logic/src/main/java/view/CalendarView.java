@@ -2,14 +2,14 @@ package view;
 
 import entity.CalendarDay;
 import entity.CourseSchedule;
+import entity.EventSchedule;
 import interface_adapter.add_course_schedule.AddCourseScheduleController;
-import interface_adapter.add_event.AddRecommendEventController;
 import interface_adapter.add_event.AddUserEventController;
 import interface_adapter.calendar.CalendarNextButtonController;
 import interface_adapter.calendar.CalendarPresenter;
 import interface_adapter.calendar.CalendarPreviousButtonController;
 import use_case.add_course_schedule.AddCourseScheduleDataAccessInterface;
-import use_case.add_event.AddEventDataAccessInterface;
+import use_case.add_event.AddEventScheduleDataAccessInterface;
 import use_case.calendar.CalendarInputBoundary;
 import use_case.calendar.CalendarInputData;
 
@@ -28,9 +28,8 @@ public class CalendarView {
     private final CalendarPresenter calendarPresenter;
     private final AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface;
     private final AddCourseScheduleController addCourseScheduleController;
-    private final AddEventDataAccessInterface addEventDataAccessInterface;
+    private final AddEventScheduleDataAccessInterface addEventScheduleDataAccessInterface;
     private final AddUserEventController addUserEventController;
-    private final AddRecommendEventController addRecommendEventController;
 
     private final CalendarPreviousButtonController calendarPreviousButtonController;
     private final CalendarNextButtonController calendarNextButtonController;
@@ -51,17 +50,15 @@ public class CalendarView {
                         CalendarPresenter calendarPresenter,
                         AddCourseScheduleDataAccessInterface addCourseScheduleDataAccessInterface,
                         AddCourseScheduleController addCourseScheduleController,
-                        AddEventDataAccessInterface addEventDataAccessInterface,
-                        AddUserEventController addUserEventController,
-                        AddRecommendEventController addRecommendEventController) {
+                        AddEventScheduleDataAccessInterface addEventScheduleDataAccessInterface,
+                        AddUserEventController addUserEventController) {
 
         this.calendarInteractor = calendarInputBoundary;
         this.calendarPresenter = calendarPresenter;
         this.addCourseScheduleDataAccessInterface = addCourseScheduleDataAccessInterface;
         this.addCourseScheduleController = addCourseScheduleController;
-        this.addEventDataAccessInterface = addEventDataAccessInterface;
+        this.addEventScheduleDataAccessInterface = addEventScheduleDataAccessInterface;
         this.addUserEventController = addUserEventController;
-        this.addRecommendEventController = addRecommendEventController;
 
         this.calendarPreviousButtonController = new CalendarPreviousButtonController(calendarInputBoundary, year, month);
         this.calendarNextButtonController = new CalendarNextButtonController(calendarInputBoundary, year, month);
@@ -150,13 +147,13 @@ public class CalendarView {
 
     private JLabel createDayLabel(CalendarDay day) {
         JLabel dayLabel = CalendarUIComponentFactory.createLabel(
-                day.isEmpty() ? "" : String.valueOf(day.getDay().getDayOfMonth()),
+                day.isEmpty() ? "" : String.valueOf(day.getDate().getDayOfMonth()),
                 16, Color.BLACK
         );
 
         if (!day.isEmpty()) {
             Calendar calendar = Calendar.getInstance();
-            calendar.set(day.getDay().getYear(), day.getDay().getMonthValue() - 1, day.getDay().getDayOfMonth());
+            calendar.set(day.getDate().getYear(), day.getDate().getMonthValue() - 1, day.getDate().getDayOfMonth());
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
             if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
@@ -179,20 +176,28 @@ public class CalendarView {
     }
 
     private void showSchedules(CalendarDay day) {
-        Map<LocalDate, List<CourseSchedule>> dayToScheduleMap = addCourseScheduleDataAccessInterface.getDayToScheduleMap();
-        if (dayToScheduleMap.containsKey(day.getDay())) {
-            StringBuilder message = new StringBuilder("Courses and Events on " + day.getDay() + ":\n");
-            List<CourseSchedule> courseScheduleList = dayToScheduleMap.get(day.getDay());
-            courseScheduleList.forEach(schedule -> {
-                message.append("Course Name: ").append(schedule.getInstanceName()).append("\n");
-                schedule.getInstanceDateAndTimeSlot().get(day.getDay()).forEach(slot -> {
-                    message.append("Start Time: ").append(slot.getStartTime())
-                            .append(", End Time: ").append(slot.getEndTime()).append("\n");
-                });
-            });
-            JOptionPane.showMessageDialog(frame, message.toString());
-        } else {
+        Map<LocalDate, List<CourseSchedule>> dayToCourseScheduleMap = addCourseScheduleDataAccessInterface.getDayToCourseScheduleMap();
+        Map<LocalDate, List<EventSchedule>> dayToEventScheduleMap = addEventScheduleDataAccessInterface.getDayToEventScheduleMap();
+        LocalDate date = day.getDate();
+
+        if (!dayToCourseScheduleMap.containsKey(date) && !dayToEventScheduleMap.containsKey(date)) {
             JOptionPane.showMessageDialog(frame, "No courses or events on this date.");
+
+        } else {
+            StringBuilder message = new StringBuilder("Courses and Events on " + date + ":\n");
+            if (dayToCourseScheduleMap.containsKey(date)){
+                List<CourseSchedule> courseScheduleList = dayToCourseScheduleMap.get(date);
+                courseScheduleList.forEach(schedule -> {
+                    message.append(schedule.toString(date)).append("\n");
+                });
+            }
+            if (dayToEventScheduleMap.containsKey(date)){
+                List<EventSchedule> eventScheduleList = dayToEventScheduleMap.get(date);
+                eventScheduleList.forEach(schedule -> {
+                    message.append(schedule.toString()).append("\n");
+                });
+            }
+            JOptionPane.showMessageDialog(frame, message.toString());
         }
     }
 }
