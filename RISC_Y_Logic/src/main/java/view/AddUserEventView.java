@@ -18,11 +18,10 @@ public class AddUserEventView {
 
     private final JList<String> tagsInputField = new JList<>();
 
-    private AddUserEventController addUserEventController;
-
     private final JButton addEvent = new JButton("Add Event");
 
-    public AddUserEventView() {
+    public AddUserEventView(AddUserEventController addUserEventController) {
+
         final JPanel view = new JPanel();
         final JLabel title = new JLabel("Add Event");
 
@@ -71,9 +70,5 @@ public class AddUserEventView {
         frame.add(view);
         frame.pack();
         frame.setVisible(true);
-    }
-
-    public void setAddUserEventController(AddUserEventController addUserEventController) {
-        this.addUserEventController = addUserEventController;
     }
 }

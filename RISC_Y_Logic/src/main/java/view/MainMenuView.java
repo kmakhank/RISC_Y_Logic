@@ -1,13 +1,18 @@
 package view;
 
 import data_access.InMemoryScheduleRepository;
+import entity.EventFactory;
 import interface_adapter.add_course_schedule.AddCourseScheduleController;
 import interface_adapter.add_course_schedule.AddCourseSchedulePresenter;
+import interface_adapter.add_event.AddEventPresenter;
+import interface_adapter.add_event.AddRecommendEventController;
+import interface_adapter.add_event.AddUserEventController;
 import interface_adapter.calendar.CalendarPresenter;
 import interface_adapter.mainmenu.MainMenuBackButtonController;
 import interface_adapter.mainmenu.MainMenuCalendarController;
 import interface_adapter.mainmenu.MainMenuEventsController;
 import use_case.add_course_schedule.AddCourseScheduleInteractor;
+import use_case.add_event.AddEventInteractor;
 import use_case.calendar.CalendarInputBoundary;
 import use_case.calendar.CalendarInteractor;
 
@@ -40,15 +45,21 @@ public class MainMenuView {
         centrePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
         InMemoryScheduleRepository repository = new InMemoryScheduleRepository();
-        AddCourseSchedulePresenter presenter = new AddCourseSchedulePresenter();
-        AddCourseScheduleInteractor interactor = new AddCourseScheduleInteractor(repository, presenter);
-        AddCourseScheduleController courseScheduleController = new AddCourseScheduleController(interactor);
+        AddCourseSchedulePresenter addCourseSchedulePresenter = new AddCourseSchedulePresenter();
+        AddCourseScheduleInteractor addCourseScheduleInteractor = new AddCourseScheduleInteractor(repository, addCourseSchedulePresenter);
+        AddCourseScheduleController courseScheduleController = new AddCourseScheduleController(addCourseScheduleInteractor);
+
+        AddEventPresenter addEventPresenter = new AddEventPresenter();
+        EventFactory eventFactory = new EventFactory();
+        AddEventInteractor addEventInteractor = new AddEventInteractor(repository, addEventPresenter, eventFactory);
+        AddUserEventController addUserEventController = new AddUserEventController(addEventInteractor);
+        AddRecommendEventController addRecommendEventController = new AddRecommendEventController(addEventInteractor);
 
         CalendarPresenter calendarPresenter = new CalendarPresenter();
         CalendarInputBoundary calendarInteractor = new CalendarInteractor(calendarPresenter);
 
 
-        MainMenuCalendarController calendarController = new MainMenuCalendarController(repository, courseScheduleController, calendarInteractor, calendarPresenter);
+        MainMenuCalendarController calendarController = new MainMenuCalendarController(calendarInteractor, calendarPresenter, repository, courseScheduleController, repository, addUserEventController, addRecommendEventController);
 
         calendarButton.addActionListener(
                 new ActionListener() {
