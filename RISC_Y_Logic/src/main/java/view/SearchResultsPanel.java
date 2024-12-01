@@ -3,19 +3,15 @@ package view;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
-public class SearchResultsView extends JPanel {
+public class SearchResultsPanel extends JPanel {
     private final String viewName = "Search Results";
 
     private final JButton addEvent = new JButton("Add Event");
 
-    public SearchResultsView() {
+    public SearchResultsPanel() {
         final JLabel title = new JLabel("Search Results");
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 

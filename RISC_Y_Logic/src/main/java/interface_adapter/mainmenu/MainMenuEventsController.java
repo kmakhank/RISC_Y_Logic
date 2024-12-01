@@ -1,9 +1,9 @@
 package interface_adapter.mainmenu;
 
-import view.AddEventView;
+import view.EventRecommendationView;
 
 public class MainMenuEventsController implements ButtonController {
     public void click() {
-        new AddEventView();
+        new EventRecommendationView();
     }
 }
